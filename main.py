@@ -63,6 +63,8 @@ questions = ["What is the first authors name, in the format (J. Doe)", "What is 
              "What type of testing was done: Respond to this question with \"TID\" for Total Ionizing Dose testing, \"SEE\" for heavy ion, proton, laser, or neutron testing, or \"OTHER\" if you are not completely 100% sure"
              ]
 joined_questions = ". ".join(questions)
+
+# TODO: possibly make prompt better
 prompt="""Please answer the following questions, as concisely as possible, and with a heavy emphasis on numbers instead of words.
             Use standard text and do not provide citations for each of your answers. 
             Format each answer as a strings in a python list, and not a dictionary, eg (['Name', 'Part#', 'Type']
@@ -70,5 +72,5 @@ prompt="""Please answer the following questions, as concisely as possible, and w
 print(prompt)
 
 
-
+# TODO: OVERARCHING TODO, currently code uploads, and calls GPT twice for the same pdf, might be better to combine into single request... could be too big of a prompt...
 main()
