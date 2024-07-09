@@ -16,13 +16,11 @@ import ast
 def main():
   # Gather the names of all pdfs provided (at the moment, in the same directory)
   pdf_names = find_file_names()
-
+  answer_matrix = []
   for paper in pdf_names:
     # Gather info about paper, such as (author, part no. type, manufacturer, **important** type of testing)
     prelim_results = gpt_parse(assistant_prompt, prompt, paper)
-    print(prelim_results[10:-4])
     prelim_results = ast.literal_eval(prelim_results[10:-4])
-    print(prelim_results)
 
     # TODO: Get high quality, targeted questions
     if prelim_results[-1] == "TID":
@@ -40,14 +38,14 @@ def main():
             If you are unable to answer the question accurately, provide the answer N/A.\n""" + ". ".join(targeted_questions)
     secondary_results = gpt_parse(assistant_prompt, targeted_prompt, paper)
     secondary_results = ast.literal_eval(secondary_results[10:-4])
-    print(secondary_results)
 
     final_results = prelim_results + secondary_results
-    print(final_results)
+    answer_matrix.append(final_results)
+  print(answer_matrix)
 
 #TODO: function to find all pdfs in directory
 def find_file_names():
-  file_names = ["3_MeV_Proton_Irradiation_of_Commercial_State_of_the_Art_Photonic_Mixer_Devices.pdf"]
+  file_names = ["3_MeV_Proton_Irradiation_of_Commercial_State_of_the_Art_Photonic_Mixer_Devices.pdf", "RADON-5E_portable_pulsed_laser_simulator_description_qualification_technique_and_results_dosimetry_procedure.pdf"]
   return file_names
 
 #openai.api_key = 'sk-proj' #currently an environment variable, but can be put here
@@ -72,5 +70,5 @@ prompt="""Please answer the following questions, as concisely as possible, and w
 print(prompt)
 
 
-# TODO: OVERARCHING TODO, currently code uploads, and calls GPT twice for the same pdf, might be better to combine into single request... could be too big of a prompt...
+# TODO: OVERARCHING TODO, currently code uploads, and calls GPT twice for the same pdf, might be better to combine into single request... could be too big of a prompt... but definitely should be explored
 main()
