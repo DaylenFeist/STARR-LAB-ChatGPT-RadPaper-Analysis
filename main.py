@@ -13,7 +13,7 @@ Description:
 from gpt_analysis import gpt_parse
 import ast
 import xlsxwriter
-
+import os
 def main():
   # Gather the names of all pdfs provided (at the moment, in the same directory)
   pdf_names = find_file_names()
@@ -45,11 +45,19 @@ def main():
   print(answer_matrix)
   write_to_excel(answer_matrix, pdf_names)
 
-#TODO: function to find all pdfs in directory
 def find_file_names():
     #finds all files in the same directory, with the extension .pdf, and returns them in a list
   file_names = ["3_MeV_Proton_Irradiation_of_Commercial_State_of_the_Art_Photonic_Mixer_Devices.pdf", "RADON-5E_portable_pulsed_laser_simulator_description_qualification_technique_and_results_dosimetry_procedure.pdf"]
   return file_names
+
+# This function works to get all the papers from the ExamplePaper directory
+# Works correctly but am working on implementing it in main. Currently Debugging
+def find_papers():
+    directory = 'ExamplePapers'
+    paperList = []
+    for filename in os.listdir(directory):
+        paperList.append(os.path.join(directory, filename))
+    return paperList
 
 def write_to_excel(matrix, papers):
     #writes the final answers and the names of papers to an excel book,
