@@ -15,11 +15,13 @@ import ast
 import xlsxwriter
 import os
 from threading import Thread
+import time
 
 def process_paper(paper:str, result_list, index:int):
   prelim_results = gpt_parse(assistant_prompt, prompt, paper)
   temp = prelim_results[10:-4]
   print("This is temp: " + temp)
+  time.sleep(3)
   prelim_results = ast.literal_eval(temp)
   # TODO: Get high quality, targeted questions
   if prelim_results[-1] == "TID":
@@ -34,7 +36,7 @@ def process_paper(paper:str, result_list, index:int):
   targeted_prompt = "Please answer the following questions, as concisely as possible, and with a heavy emphasis on numbers instead of words. Use standard text and do not provide citations for each of your answers.Format each answer as a strings in a python list, and not a dictionary, eg (['Name', 'Part#', 'Type']. If you are unable to answer the question accurately, provide the answer N/A.\n" + ". ".join(targeted_questions)
   secondary_results = gpt_parse(assistant_prompt, targeted_prompt, paper)
   blob = secondary_results[10:-4]
-  print("Reached here " + blob)
+  time.sleep(3)
   secondary_results = ast.literal_eval(blob)
 
   final_results = prelim_results + secondary_results
