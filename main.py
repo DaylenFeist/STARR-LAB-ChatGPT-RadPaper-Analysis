@@ -1,7 +1,7 @@
 """
 Title: OpenAI--gpt-4o--Radiation Paper Analysis
 Supervisor: Dr. Li Chen (ECE--USASK)
-Creator: Daylen Feist
+Creator: Daylen Feist, Shiv Krishnaswamy , Juan Arguello Escalante
 Date: 2024-07-05
 
 Description:
@@ -11,18 +11,17 @@ Description:
     which would have tremendous value to industry, and community research
 """
 from gpt_analysis import gpt_parse
-import ast
 import xlsxwriter
 import os
 def main():
   # Gather the names of all pdfs provided (at the moment, in the same directory)
-  pdf_names = find_file_names()
+  pdf_names = find_papers()
   answer_matrix = []
   for paper in pdf_names:
     # Gather info about paper, such as (author, part no. type, manufacturer, **important** type of testing)
     prelim_results = gpt_parse(assistant_prompt, prompt, paper)
-    prelim_results = ast.literal_eval(prelim_results[10:-4])
-
+    print(prelim_results)
+    prelim_results = prelim_results.split("ø")
     # TODO: Get high quality, targeted questions
     if prelim_results[-1] == "TID":
       targeted_questions = ["What type was the radiation source", "What was the total dose",
@@ -30,30 +29,25 @@ def main():
     elif prelim_results[-1] == "SEE":
       targeted_questions = ["What type was the radiation source", "What the energy of the source",
                               "Were there any failures, if so, when?"]
-    elif prelim_results[-1][:4] == "Other":
+    else:
       targeted_questions = ["What type was the radiation source",
                               "Were there any failures, if so, when?"]
     targeted_prompt = """Please answer the following questions, as concisely as possible, and with a heavy emphasis on numbers instead of words.
             Use standard text and do not provide citations for each of your answers. 
-            Format each answer as a strings in a python list, and not a dictionary, eg (['Name', 'Part#', 'Type']
+            Answer each question, and separate the answers with a "ø" character as a delimiter.
             If you are unable to answer the question accurately, provide the answer N/A.\n""" + ". ".join(targeted_questions)
     secondary_results = gpt_parse(assistant_prompt, targeted_prompt, paper)
-    secondary_results = ast.literal_eval(secondary_results[10:-4])
+    secondary_results = secondary_results.split("ø")
 
     final_results = prelim_results + secondary_results
     answer_matrix.append(final_results)
   print(answer_matrix)
   write_to_excel(answer_matrix, pdf_names)
 
-def find_file_names():
-    #finds all files in the same directory, with the extension .pdf, and returns them in a list
-  file_names = ["3_MeV_Proton_Irradiation_of_Commercial_State_of_the_Art_Photonic_Mixer_Devices.pdf", "RADON-5E_portable_pulsed_laser_simulator_description_qualification_technique_and_results_dosimetry_procedure.pdf"]
-  return file_names
-
 # This function works to get all the papers from the ExamplePaper directory
 # Works correctly but am working on implementing it in main. Currently Debugging
 def find_papers():
-    directory = 'ExamplePapers'
+    directory = 'Papers_Sorted/SMD'
     paperList = []
     for filename in os.listdir(directory):
         paperList.append(os.path.join(directory, filename))
@@ -88,7 +82,7 @@ joined_questions = ". ".join(questions)
 # TODO: possibly make prompt better
 prompt="""Please answer the following questions, as concisely as possible, and with a heavy emphasis on numbers instead of words.
             Use standard text and do not provide citations for each of your answers. 
-            Format each answer as a strings in a python list, and not a dictionary, eg (['Name', 'Part#', 'Type']
+            Answer each question, and separate the answers with a "ø" character as a delimiter.
             If you are unable to answer the question accurately, provide the answer N/A.\n""" + joined_questions
 print(prompt)
 

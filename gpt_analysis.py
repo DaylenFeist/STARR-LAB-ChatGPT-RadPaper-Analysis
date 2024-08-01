@@ -1,5 +1,4 @@
-from openai import OpenAI, AssistantEventHandler
-from typing_extensions import override
+from openai import OpenAI
 import time
 
 def gpt_parse(assistant_prompt, prompt, paper):
@@ -46,9 +45,15 @@ def gpt_parse(assistant_prompt, prompt, paper):
     ) as stream:
         stream.until_done()
 
-
-    time.sleep(4) #added a delay, as it would sometimes return user prompt instead of waiting for response
     messages = client.beta.threads.messages.list(
-        thread_id=thread.id
-    )
+        thread_id=thread.id)
+
+    while messages.data[0].role == 'user':
+        time.sleep(1)
+        messages = client.beta.threads.messages.list(
+            thread_id=thread.id)
+        return "user" #terrible workaround that does not work... not sure why program sometimes returns message from user
+                        #pls fix
+
+
     return (messages.data[0].content[0].text.value)
