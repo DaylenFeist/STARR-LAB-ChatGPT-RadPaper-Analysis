@@ -23,23 +23,23 @@ def main():
         if paper_type == "LAB":
             if not os.path.exists(baseFolder + "/LAB/"):
                 os.makedirs(baseFolder + "/LAB/")
-            shutil.move(paper, "Papers_Sorted/LAB/" + os.path.basename(paper))
+            shutil.copy(paper, "Papers_Sorted/LAB/" + os.path.basename(paper))
         elif paper_type == "TST":
             if not os.path.exists(baseFolder + "/TST/"):
                 os.makedirs(baseFolder + "/TST/")
-            shutil.move(paper, "Papers_Sorted/TST/" + os.path.basename(paper))
+            shutil.copy(paper, "Papers_Sorted/TST/" + os.path.basename(paper))
         elif paper_type == "PHE":
             if not os.path.exists(baseFolder + "/PHE/"):
                 os.makedirs(baseFolder + "/PHE/")
-            shutil.move(paper, "Papers_Sorted/PHE/" + os.path.basename(paper))
+            shutil.copy(paper, "Papers_Sorted/PHE/" + os.path.basename(paper))
         elif paper_type == "CMP":
             if not os.path.exists(baseFolder + "/CMP/"):
                 os.makedirs(baseFolder + "/CMP/")
-            shutil.move(paper, "Papers_Sorted/CMP/" + os.path.basename(paper))
+            shutil.copy(paper, "Papers_Sorted/CMP/" + os.path.basename(paper))
         elif paper_type == "SMD":
             if not os.path.exists(baseFolder + "/SMD/"):
                 os.makedirs(baseFolder + "/SMD/")
-            shutil.move(paper, "Papers_Sorted/SMD/" + os.path.basename(paper))
+            shutil.copy(paper, "Papers_Sorted/SMD/" + os.path.basename(paper))
         else:
             print("user")
 
