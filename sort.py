@@ -12,32 +12,42 @@ import shutil
 def main():
     # Gather the names of all pdfs provided (at the moment, in the same directory)
     pdf_names = find_papers()
-    types = []
+    if not os.path.exists("Papers_Sorted"):
+        os.makedirs("Papers_Sorted")
     for paper in pdf_names:
         # Gather info about paper, such as (author, part no. type, manufacturer, **important** type of testing)
         paper_type = gpt_parse(assistant_prompt, prompt, paper)
         print(paper_type)
         time.sleep(2)
+        baseFolder = 'Papers_Sorted'
         if paper_type == "LAB":
+            if not os.path.exists(baseFolder + "/LAB/"):
+                os.makedirs(baseFolder + "/LAB/")
             shutil.move(paper, "Papers_Sorted/LAB/" + os.path.basename(paper))
         elif paper_type == "TST":
+            if not os.path.exists(baseFolder + "/TST/"):
+                os.makedirs(baseFolder + "/TST/")
             shutil.move(paper, "Papers_Sorted/TST/" + os.path.basename(paper))
         elif paper_type == "PHE":
+            if not os.path.exists(baseFolder + "/PHE/"):
+                os.makedirs(baseFolder + "/PHE/")
             shutil.move(paper, "Papers_Sorted/PHE/" + os.path.basename(paper))
         elif paper_type == "CMP":
+            if not os.path.exists(baseFolder + "/CMP/"):
+                os.makedirs(baseFolder + "/CMP/")
             shutil.move(paper, "Papers_Sorted/CMP/" + os.path.basename(paper))
         elif paper_type == "SMD":
+            if not os.path.exists(baseFolder + "/SMD/"):
+                os.makedirs(baseFolder + "/SMD/")
             shutil.move(paper, "Papers_Sorted/SMD/" + os.path.basename(paper))
         else:
             print("user")
-
 
 def find_papers():
     directory = 'ExamplePapers'
     paperList = []
     for filename in os.listdir(directory):
         paperList.append(os.path.join(directory, filename))
-    print(paperList)
     return paperList
 
 

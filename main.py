@@ -13,6 +13,7 @@ Description:
 from gpt_analysis import gpt_parse
 import xlsxwriter
 import os
+import sort
 def main():
   # Gather the names of all pdfs provided (at the moment, in the same directory)
   pdf_names = find_papers()
@@ -43,6 +44,7 @@ def main():
     answer_matrix.append(final_results)
   print(answer_matrix)
   write_to_excel(answer_matrix, pdf_names)
+
 
 # This function works to get all the papers from the ExamplePaper directory
 # Works correctly but am working on implementing it in main. Currently Debugging
