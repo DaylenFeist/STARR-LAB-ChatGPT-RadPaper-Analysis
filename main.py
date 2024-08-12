@@ -20,17 +20,17 @@ def main():
     paper_list = find_papers()
     num_papers = len(paper_list)
     thread_list = [None] * num_papers
+    answer_matrix = []
     for x in range(num_papers):
         paper = paper_list[x]
-        thread_list[x] = thread.Thread(target=process_paper, args=(paper,))
+        print(paper)
+        thread_list[x] = thread.Thread(target=process_paper, args=(paper, answer_matrix,))
         thread_list[x].start()
     for y in range(num_papers):
         thread_list[y].join()
+    write_to_excel(answer_matrix, paper_list)
 
-    # TODO: Needs fixing
-    #write_to_excel(thread_list, paper_list)
-
-def process_paper(paper):
+def process_paper(paper, answer_matrix):
     # Gather info about paper, such as (author, part no. type, manufacturer, **important** type of testing)
     prelim_results = gpt_parse(assistant_prompt, prompt, paper)
     prelim_results = prelim_results.split("ø")
@@ -53,7 +53,7 @@ def process_paper(paper):
     secondary_results = secondary_results.split("ø")
     final_results = prelim_results + secondary_results
     print(final_results)
-    return final_results
+    answer_matrix.append(final_results)
 
 # This function works to get all the papers from the ExamplePaper directory
 def find_papers():
