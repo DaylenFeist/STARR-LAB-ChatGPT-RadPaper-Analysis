@@ -3,45 +3,55 @@ Description:
     This file serves the purpose of sorting IEEE workshop papers into distinct categories
     to use targeted analysis.
     """
+
 import time
 
 from gpt_analysis import gpt_parse
 import os
 import shutil
+import threading as thread
 
 def main():
     # Gather the names of all pdfs provided (at the moment, in the same directory)
-    pdf_names = find_papers()
+    paper_list = find_papers()
+    num_papers = len(paper_list)
+    thread_list = [None] * num_papers
     if not os.path.exists("Papers_Sorted"):
         os.makedirs("Papers_Sorted")
-    for paper in pdf_names:
-        # Gather info about paper, such as (author, part no. type, manufacturer, **important** type of testing)
-        paper_type = gpt_parse(assistant_prompt, prompt, paper)
-        print(paper_type)
-        time.sleep(2)
-        baseFolder = 'Papers_Sorted'
-        if paper_type == "LAB":
-            if not os.path.exists(baseFolder + "/LAB/"):
-                os.makedirs(baseFolder + "/LAB/")
-            shutil.copy(paper, "Papers_Sorted/LAB/" + os.path.basename(paper))
-        elif paper_type == "TST":
-            if not os.path.exists(baseFolder + "/TST/"):
-                os.makedirs(baseFolder + "/TST/")
-            shutil.copy(paper, "Papers_Sorted/TST/" + os.path.basename(paper))
-        elif paper_type == "PHE":
-            if not os.path.exists(baseFolder + "/PHE/"):
-                os.makedirs(baseFolder + "/PHE/")
-            shutil.copy(paper, "Papers_Sorted/PHE/" + os.path.basename(paper))
-        elif paper_type == "CMP":
-            if not os.path.exists(baseFolder + "/CMP/"):
-                os.makedirs(baseFolder + "/CMP/")
-            shutil.copy(paper, "Papers_Sorted/CMP/" + os.path.basename(paper))
-        elif paper_type == "SMD":
-            if not os.path.exists(baseFolder + "/SMD/"):
-                os.makedirs(baseFolder + "/SMD/")
-            shutil.copy(paper, "Papers_Sorted/SMD/" + os.path.basename(paper))
-        else:
-            print("user")
+    for x in range(num_papers):
+        cur_paper = paper_list[x]
+        thread_list[x] = thread.Thread(target=sort_papers, args=(cur_paper,))
+        thread_list[x].start()
+    for y in range(num_papers):
+        thread_list[y].join()
+
+def sort_papers(paper):
+    paper_type = gpt_parse(assistant_prompt, prompt, paper)
+    print(paper_type)
+    time.sleep(2)
+    baseFolder = 'Papers_Sorted'
+    if paper_type == "LAB":
+        if not os.path.exists(baseFolder + "/LAB/"):
+            os.makedirs(baseFolder + "/LAB/")
+        shutil.copy(paper, "Papers_Sorted/LAB/" + os.path.basename(paper))
+    elif paper_type == "TST":
+        if not os.path.exists(baseFolder + "/TST/"):
+            os.makedirs(baseFolder + "/TST/")
+        shutil.copy(paper, "Papers_Sorted/TST/" + os.path.basename(paper))
+    elif paper_type == "PHE":
+        if not os.path.exists(baseFolder + "/PHE/"):
+            os.makedirs(baseFolder + "/PHE/")
+        shutil.copy(paper, "Papers_Sorted/PHE/" + os.path.basename(paper))
+    elif paper_type == "CMP":
+        if not os.path.exists(baseFolder + "/CMP/"):
+            os.makedirs(baseFolder + "/CMP/")
+        shutil.copy(paper, "Papers_Sorted/CMP/" + os.path.basename(paper))
+    elif paper_type == "SMD":
+        if not os.path.exists(baseFolder + "/SMD/"):
+            os.makedirs(baseFolder + "/SMD/")
+        shutil.copy(paper, "Papers_Sorted/SMD/" + os.path.basename(paper))
+    else:
+        print("user")
 
 def find_papers():
     directory = 'ExamplePapers'
@@ -73,8 +83,6 @@ prompt="""Please answer the following question, as concisely as possible, with a
             Use standard text and do not provide citations for each of your answer.
             Answer the question with the keyword for one of the 5 papers.
             If you are unable to answer the question accurately, provide the answer N/A."""
-print(prompt)
+print("CLASSIFYING PAPER TYPE\n")
 
-
-# TODO: OVERARCHING TODO, currently code uploads, and calls GPT twice for the same pdf, might be better to combine into single request... could be too big of a prompt... but definitely should be explored
 main()
