@@ -23,7 +23,6 @@ def main():
     answer_matrix = []
     for x in range(num_papers):
         paper = paper_list[x]
-        print(paper)
         thread_list[x] = thread.Thread(target=process_paper, args=(paper, answer_matrix,))
         thread_list[x].start()
     for y in range(num_papers):
@@ -54,7 +53,6 @@ def process_paper(paper, answer_matrix):
     final_results = prelim_results + secondary_results
     print(final_results)
     answer_matrix.append(final_results)
-
 # This function works to get all the papers from the ExamplePaper directory
 def find_papers():
     directory = 'Papers_Sorted/SMD'
