@@ -13,7 +13,6 @@ Description:
 from gpt_analysis import gpt_parse
 import threading as thread
 import xlsxwriter
-import sort
 import os
 
 
@@ -103,7 +102,7 @@ assistant_prompt = [name, assistant_instructions, model]
 
 # author, part no. type, manufacturer, **important** type of testing)
 questions = ["What is the first authors name, in the format (J. Doe)", "What is the Part No. or name if that is not available",
-             "What is the type of part (eg, switching regulator)", "Who is the manufacturer",
+             "What is the type of part (eg, switching regulator), if there are multiple part numbers listed, list them all and seperate them with a \"¶\"", "Who is the manufacturer",
              "What type of testing was done: Respond to this question with \"TID\" for Total Ionizing Dose testing, \"SEE\" for heavy ion, proton, laser, or neutron testing, or \"OTHER\" if you are not completely 100% sure"
              ]
 joined_questions = ". ".join(questions)

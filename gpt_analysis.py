@@ -9,7 +9,7 @@ def gpt_parse(assistant_prompt, prompt, paper):
         instructions=assistant_prompt[1],
         model=assistant_prompt[2],
         tools=[{"type": "file_search"}],
-
+        temperature=.1
     )
 
     # Upload the user provided file to OpenAI

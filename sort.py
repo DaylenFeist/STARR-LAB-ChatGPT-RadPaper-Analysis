@@ -111,4 +111,5 @@ prompt = """Please answer the following question, as concisely as possible, with
             If you are unable to answer the question accurately, provide the answer N/A."""
 print("CLASSIFYING PAPER TYPE\n")
 
-main()
+if __name__ == "main":
+    main()
